@@ -38,12 +38,4 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(name);
     }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "name='" + name + '\'' +
-                ", transactions=" + transactions +
-                '}';
-    }
 }

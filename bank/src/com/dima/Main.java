@@ -5,7 +5,9 @@ public class Main {
         Bank b = new Bank("PDP");
 
         b.addBranch("main");
+        b.addCustomer("main", "Dima", 23.55);
+        b.addCustomerTransaction("main", "Dima", 105);
 
-        System.out.println(b.getBranches());
+        b.listCustomers("main", false);
     }
 }
