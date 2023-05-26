@@ -18,9 +18,10 @@ public class Main {
 //        inFlight(bird);
 //        System.out.println("------------------------------------------");
 //        inFlight(donald);
-        double kmsTraveled = 100;
-        double milesTraveled = kmsTraveled * FlightEnabled.KM_TO_MILES;
-        System.out.println(String.format("The %s travelled %.2f kms or %.2f miles.", bird.getClass().getSimpleName(), kmsTraveled, milesTraveled));
+//        double kmsTraveled = 100;
+//        double milesTraveled = kmsTraveled * FlightEnabled.KM_TO_MILES;
+//        System.out.println(String.format("The %s travelled %.2f kms or %.2f miles.", bird.getClass().getSimpleName(), kmsTraveled, milesTraveled));
+        System.out.println(bird.transition());
     }
 
     public static void inFlight(FlightEnabled fe) {

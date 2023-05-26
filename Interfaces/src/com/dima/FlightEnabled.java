@@ -8,4 +8,8 @@ public interface FlightEnabled {
     void land();
 
     void fly();
+
+    default String transition() {
+        return "Transition is not implemented on " + getClass().getName();
+    }
 }
