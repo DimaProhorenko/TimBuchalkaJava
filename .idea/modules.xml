@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AbstractChallenge/AbstractChallenge.iml" filepath="$PROJECT_DIR$/AbstractChallenge/AbstractChallenge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Comparing/Comparing.iml" filepath="$PROJECT_DIR$/Comparing/Comparing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Generics/Generics.iml" filepath="$PROJECT_DIR$/Generics/Generics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Interfaces/Interfaces.iml" filepath="$PROJECT_DIR$/Interfaces/Interfaces.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LinkedLists/LinkedLists.iml" filepath="$PROJECT_DIR$/LinkedLists/LinkedLists.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MobilePhone/MobilePhone.iml" filepath="$PROJECT_DIR$/MobilePhone/MobilePhone.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Playlist/Playlist.iml" filepath="$PROJECT_DIR$/Playlist/Playlist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TimBuchalka.iml" filepath="$PROJECT_DIR$/.idea/TimBuchalka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abstraction/abstraction.iml" filepath="$PROJECT_DIR$/abstraction/abstraction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bank/bank.iml" filepath="$PROJECT_DIR$/bank/bank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/genericsExtra/genericsExtra.iml" filepath="$PROJECT_DIR$/genericsExtra/genericsExtra.iml" />
+    </modules>
+  </component>
+</project>
