@@ -101,7 +101,13 @@ public class Card {
     }
 
     public static List<Card> getStandardDeck() {
-        return new ArrayList<Card>();
+        List<Card> deck = new ArrayList<>(52);
+        for(Suit suit : Suit.values()) {
+            for(int i = 2; i < 11; i++) {
+                deck.add(getNumericCard(suit, i));
+            }
+        }
+        return deck;
     }
 
 
