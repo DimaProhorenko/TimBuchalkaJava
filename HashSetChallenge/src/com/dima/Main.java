@@ -13,16 +13,52 @@ public class Main {
         Set<Contact> emailContacts = new HashSet<>(emails);
         Set<Contact> phoneContacts = new HashSet<>(phones);
 
-        Contact robin = emails.get(emails.indexOf(new Contact("Robin Hood")));
-        robin.addEmail("Sherwood Forest");
+//        Contact robin = emails.get(emails.indexOf(new Contact("Robin Hood")));
+//        robin.addEmail("Sherwood Forest");
+//
+//        Contact mickey = emails.get(emails.indexOf(new Contact("Mickey Mouse")));
+//        mickey.addEmail("Dreamworks actor");
+//
+//        mickey.replaceEmailIfExists("mmouse@dreamworksactor.com", "mcky@actor.org");
 
-        Contact mickey = emails.get(emails.indexOf(new Contact("Mickey Mouse")));
-        mickey.addEmail("Dreamworks actor");
+//        printData("Emails", emailContacts);
+//        printData("Phones", phoneContacts);
 
-        mickey.replaceEmailIfExists("mmouse@dreamworksactor.com", "mcky@actor.org");
+//        Union of two sets
+        Set<Contact> unionAB = new HashSet<>();
+        unionAB.addAll(emails);
+        unionAB.addAll(phones);
 
-        printData("Emails", emailContacts);
-        printData("Phones", phoneContacts);
+        printData("(A \u222A B) Union of elements", unionAB);
+
+//        Intersection of two sets
+        Set<Contact> intersectAB = new HashSet<>(emailContacts);
+        intersectAB.retainAll(phoneContacts);
+
+        printData("(A \u2229 B) Intersection of elements", intersectAB);
+
+        Set<Contact> intersectBA = new HashSet<>(phoneContacts);
+        intersectBA.retainAll(emailContacts);
+
+        printData("(B \u2229 A) Intersection of B A", intersectBA);
+
+//        Difference
+
+        Set<Contact> AMinusB = new HashSet<>(emailContacts);
+        AMinusB.removeAll(phoneContacts);
+
+        printData("(A - B) Difference", AMinusB);
+
+        Set<Contact> BMinusA = new HashSet<>(phoneContacts);
+        BMinusA.removeAll(emailContacts);
+
+        printData("(B - A) Difference", BMinusA);
+
+//        Symmetric Difference
+        Set<Contact> symmetricDifference = new HashSet<>(AMinusB);
+        symmetricDifference.addAll(BMinusA);
+
+        printData("Symmetric Difference", symmetricDifference);
     }
 
 
