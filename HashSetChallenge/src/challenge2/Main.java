@@ -9,7 +9,7 @@ public class Main {
        Set<Task> bossTasks = TaskData.getTasksData("all");
 
 
-       Set<Task> allTasks = getUnion(bossTasks, annTasks, bobTasks, carolTasks);
+       Set<Task> allTasks = getUnion(annTasks, bobTasks, carolTasks);
        sortAndPrint("Union of tasks", allTasks);
 
        Set<Task> intersection = getIntersection(annTasks, bobTasks);
@@ -17,6 +17,9 @@ public class Main {
 
        Set<Task> difference = getDifference(annTasks, bobTasks);
        sortAndPrint("Difference", difference);
+
+       Set<Task> unassignedTasks = getDifference(bossTasks, allTasks);
+       sortAndPrint("All unassigned tasks", unassignedTasks);
     }
 
     public static void sortAndPrint(String header, Collection<Task> collection) {
