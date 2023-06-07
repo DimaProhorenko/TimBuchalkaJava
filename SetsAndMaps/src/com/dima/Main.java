@@ -21,10 +21,22 @@ public class Main {
         Contact first = sorted.first();
         Contact last = sorted.last();
 
-        printSeparator();
-        System.out.printf("min: %s, first: %s\nmax: %s, last: %s\n",
-                min.getName(), first.getName(), max.getName(), last.getName());
-        printSeparator();
+//        printSeparator();
+//        System.out.printf("min: %s, first: %s\nmax: %s, last: %s\n",
+//                min.getName(), first.getName(), max.getName(), last.getName());
+//        printSeparator();
+//        NavigableSet<Contact> copy = new TreeSet<>(sorted);
+//        Contact a = copy.pollFirst();
+//        printSeparator();
+//        System.out.println(sorted);
+//        printSeparator();
+//        System.out.println(copy);
+//        printSeparator();
+
+        Contact daffy = new Contact("Daffy Duck");
+        Contact daisy = new Contact("Daisy Duck");
+        Contact snoopy = new Contact("Snoopy");
+        Contact archie = new Contact("Archie");
     }
 
     public static void printSeparator() {
