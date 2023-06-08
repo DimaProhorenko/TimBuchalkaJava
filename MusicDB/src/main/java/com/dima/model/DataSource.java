@@ -122,8 +122,8 @@ public class DataSource {
         }
     }
 
-    public List<Song> querySongArtistInfo(String songName, Order order) {
-        List<Song> songs = null;
+    public Song querySongArtistInfo(String songName) {
+        Song searchSong = null;
         StringBuilder sb = new StringBuilder("SELECT %s.%s, %s.%s, %s.%s, %s.%s, %s.%s FROM %s ".formatted(
                 TABLE_SONGS, COLUMN_SONGS_ID,
                 TABLE_ARTISTS, COLUMN_ARTISTS_NAME,
@@ -141,29 +141,40 @@ public class DataSource {
                 TABLE_ALBUMS, COLUMN_ALBUMS_ARTIST,
                 TABLE_ARTISTS, COLUMN_ARTISTS_ID
         ));
-        sb.append("WHERE %s.%s LIKE '%s%%'".formatted(
+        sb.append("WHERE %s.%s LIKE '%s%%' ".formatted(
                 TABLE_SONGS, COLUMN_SONGS_TITLE,
                 songName
         ));
-        System.out.println(sb);
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery(sb.toString())) {
-            songs = new ArrayList<>();
-            while(results.next()) {
-                Song song = new Song(
-                        results.getInt(1),
-                        results.getString(2),
-                        results.getString(3),
-                        results.getString(4),
-                        results.getInt(5)
-                );
-                songs.add(song);
-            }
+
+            searchSong = new Song(
+                    results.getInt(1),
+                    results.getString(2),
+                    results.getString(3),
+                    results.getString(4),
+                    results.getInt(5)
+            );
         } catch (SQLException e) {
             System.out.println("Couldn't query Info " + e.getMessage());
             e.printStackTrace();
         } finally {
-            return songs;
+            return searchSong;
+        }
+    }
+
+    public void printTableMetaData(String tableName) {
+        String query = "SELECT * FROM " + tableName;
+        try (Statement statement = conn.createStatement();
+             ResultSet results = statement.executeQuery(query)) {
+            ResultSetMetaData meta = results.getMetaData();
+            int numOfCols = meta.getColumnCount();
+            for (int i = 1; i <= numOfCols; i++) {
+                System.out.printf("Column %d -> %s(%s)\n", i, meta.getColumnName(i), meta.getColumnClassName(i));
+            }
+        } catch (SQLException e) {
+            System.out.printf("Couldn't query %s table -> %s", tableName, e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -18,10 +18,9 @@ public class Main {
 //        if (albums != null) {
 //            albums.forEach(System.out::println);
 //        }
-        List<Song> list = ds.querySongArtistInfo("river of pain", DataSource.Order.ASC);
-        if (list != null) {
-            list.forEach(System.out::println);
-        }
+        Song riverOfPain= ds.querySongArtistInfo("river of pain");
+
+        ds.printTableMetaData(DataSource.TABLE_SONGS);
         ds.close();
     }
 }
