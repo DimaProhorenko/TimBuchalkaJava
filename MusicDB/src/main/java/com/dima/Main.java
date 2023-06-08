@@ -11,7 +11,11 @@ public class Main {
         DataSource ds = new DataSource();
         ds.open();
         List<Artist> artists = ds.queryArtists(DataSource.Order.DESC);
-        artists.forEach(System.out::println);
+//        artists.forEach(System.out::println);
+        List<String> albums = ds.queryAlbumsForArtist("Iron", DataSource.Order.ASC);
+        if (albums != null) {
+            albums.forEach(System.out::println);
+        }
         ds.close();
     }
 }

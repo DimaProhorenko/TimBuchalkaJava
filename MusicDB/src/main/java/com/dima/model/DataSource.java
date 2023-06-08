@@ -24,6 +24,13 @@ public class DataSource {
     public static final String COLUMN_SONGS_TITLE = "title";
     public static final String COLUMN_SONGS_ALBUM = "album";
 
+    public static final String QUERY_ALBUMS_BY_ARTIST_START =
+            new StringBuilder("SELECT %s.%s, %s.%s FROM %s".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME, TABLE_ALBUMS, COLUMN_ALBUMS_NAME, TABLE_ALBUMS))
+                    .append(" INNER JOIN %s ON %s.%s = %s.%s".formatted(TABLE_ARTISTS, TABLE_ALBUMS, COLUMN_ALBUMS_ARTIST, TABLE_ARTISTS, COLUMN_ARTISTS_ID))
+                    .append(" WHERE %s.%s LIKE ".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME)).toString();
+
+    public static final String QUERY_ALABUMS_BY_ARTIST_SORT = "ORDER BY %s.%s ".formatted(TABLE_ALBUMS, COLUMN_ALBUMS_NAME);
+
     public enum Order {
         NONE,
         ASC,
@@ -65,7 +72,6 @@ public class DataSource {
             sbQuery.append(order.name());
 
         }
-        System.out.println(sbQuery);
         List<Artist> artists = null;
         try(Statement statement = conn.createStatement();
             ResultSet results = statement.executeQuery(sbQuery.toString())) {
@@ -86,46 +92,31 @@ public class DataSource {
         return queryArtists(Order.ASC);
     }
 
-    public List<Artist> queryArtists1() {
-        Statement statement = null;
-        ResultSet results = null;
-        List<Artist> artists = null;
+    public List<String> queryAlbumsForArtist(String artistName, Order order) {
+//        StringBuilder sb = new StringBuilder("SELECT %s.%s, %s.%s FROM %s".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME, TABLE_ALBUMS, COLUMN_ALBUMS_NAME, TABLE_ALBUMS));
+//        sb.append(" INNER JOIN %s ON %s.%s = %s.%s".formatted(TABLE_ARTISTS, TABLE_ALBUMS, COLUMN_ALBUMS_ARTIST, TABLE_ARTISTS, COLUMN_ARTISTS_ID));
+//        sb.append(" WHERE %s.%s LIKE '%s%%'".formatted(TABLE_ARTISTS,COLUMN_ALBUMS_NAME, artistName));
+        StringBuilder sb = new StringBuilder(QUERY_ALBUMS_BY_ARTIST_START);
+        sb.append("'%s%%' ".formatted(artistName));
 
-        try {
-            if (conn != null) {
-                statement = conn.createStatement();
-                results = statement.executeQuery("SELECT * FROM %s"
-                        .formatted(TABLE_ARTISTS));
-                artists = new ArrayList<>();
-                while (results.next()) {
-                    artists.add(new Artist(results.getInt(COLUMN_ARTISTS_ID),
-                            results.getString(COLUMN_ARTISTS_NAME)));
-                }
+        if (order != Order.NONE) {
+            sb.append(QUERY_ALABUMS_BY_ARTIST_SORT + order.name());
+        }
+        System.out.println(sb);
+
+        List<String> albums = null;
+
+        try (Statement statement = conn.createStatement();
+             ResultSet results = statement.executeQuery(sb.toString())) {
+            albums = new ArrayList<>();
+            while(results.next()) {
+                albums.add(results.getString(1) + " " + results.getString(2));
             }
-
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Couldn't query albums " + e.getMessage());
             e.printStackTrace();
-            return null;
         } finally {
-            try {
-                if (results != null) {
-                    results.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Couldn't close ResultSet " + e.getMessage());
-                e.printStackTrace();
-            }
-
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Couldn't close statement " + e.getMessage());
-                e.printStackTrace();
-            }
-            return artists;
+            return albums;
         }
     }
 }
