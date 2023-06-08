@@ -24,12 +24,15 @@ public class DataSource {
     public static final String COLUMN_SONGS_TITLE = "title";
     public static final String COLUMN_SONGS_ALBUM = "album";
 
+    public static final String QUERY_ALL_ARTISTS = "SELECT * FROM %s ".formatted(TABLE_ARTISTS);
+    public static final String QUERY_ALL_ARTISTS_SORT = "ORDER BY %s COLLATE NOCASE ".formatted(COLUMN_ARTISTS_NAME);
+
     public static final String QUERY_ALBUMS_BY_ARTIST_START =
             new StringBuilder("SELECT %s.%s, %s.%s FROM %s".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME, TABLE_ALBUMS, COLUMN_ALBUMS_NAME, TABLE_ALBUMS))
                     .append(" INNER JOIN %s ON %s.%s = %s.%s".formatted(TABLE_ARTISTS, TABLE_ALBUMS, COLUMN_ALBUMS_ARTIST, TABLE_ARTISTS, COLUMN_ARTISTS_ID))
                     .append(" WHERE %s.%s LIKE ".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME)).toString();
 
-    public static final String QUERY_ALABUMS_BY_ARTIST_SORT = "ORDER BY %s.%s ".formatted(TABLE_ALBUMS, COLUMN_ALBUMS_NAME);
+    public static final String QUERY_ALABUMS_BY_ARTIST_SORT = "ORDER BY %s.%s COLLATE NOCASE ".formatted(TABLE_ALBUMS, COLUMN_ALBUMS_NAME);
 
     public enum Order {
         NONE,
@@ -64,17 +67,17 @@ public class DataSource {
     }
 
     public List<Artist> queryArtists(Order order) {
-        StringBuilder sbQuery = new StringBuilder("SELECT * FROM ");
-        sbQuery.append(TABLE_ARTISTS);
+//        StringBuilder sbQuery = new StringBuilder("SELECT * FROM ");
+//        sbQuery.append(TABLE_ARTISTS);
+        StringBuilder sb = new StringBuilder(QUERY_ALL_ARTISTS);
         if (order != Order.NONE) {
-            sbQuery.append(" ORDER BY " + COLUMN_ARTISTS_NAME);
-            sbQuery.append(" COLLATE NOCASE ");
-            sbQuery.append(order.name());
+            sb.append(QUERY_ALL_ARTISTS_SORT);
+            sb.append(order.name());
 
         }
         List<Artist> artists = null;
         try(Statement statement = conn.createStatement();
-            ResultSet results = statement.executeQuery(sbQuery.toString())) {
+            ResultSet results = statement.executeQuery(sb.toString())) {
             artists = new ArrayList<>();
             while (results.next()) {
                 artists.add(new Artist(results.getInt(COLUMN_ARTISTS_ID),
@@ -102,7 +105,6 @@ public class DataSource {
         if (order != Order.NONE) {
             sb.append(QUERY_ALABUMS_BY_ARTIST_SORT + order.name());
         }
-        System.out.println(sb);
 
         List<String> albums = null;
 
@@ -117,6 +119,51 @@ public class DataSource {
             e.printStackTrace();
         } finally {
             return albums;
+        }
+    }
+
+    public List<Song> querySongArtistInfo(String songName, Order order) {
+        List<Song> songs = null;
+        StringBuilder sb = new StringBuilder("SELECT %s.%s, %s.%s, %s.%s, %s.%s, %s.%s FROM %s ".formatted(
+                TABLE_SONGS, COLUMN_SONGS_ID,
+                TABLE_ARTISTS, COLUMN_ARTISTS_NAME,
+                TABLE_ALBUMS, COLUMN_ALBUMS_NAME,
+                TABLE_SONGS, COLUMN_SONGS_TITLE,
+                TABLE_SONGS, COLUMN_SONGS_TRACK,
+                TABLE_SONGS
+        ));
+        sb.append("INNER JOIN %s ON %s.%s = %s.%s ".formatted(TABLE_ALBUMS,
+                TABLE_SONGS, COLUMN_SONGS_ALBUM,
+                TABLE_ALBUMS, COLUMN_ALBUMS_ID
+                ));
+        sb.append("INNER JOIN %s ON %s.%s = %s.%s ".formatted(
+                TABLE_ARTISTS,
+                TABLE_ALBUMS, COLUMN_ALBUMS_ARTIST,
+                TABLE_ARTISTS, COLUMN_ARTISTS_ID
+        ));
+        sb.append("WHERE %s.%s LIKE '%s%%'".formatted(
+                TABLE_SONGS, COLUMN_SONGS_TITLE,
+                songName
+        ));
+        System.out.println(sb);
+        try (Statement statement = conn.createStatement();
+             ResultSet results = statement.executeQuery(sb.toString())) {
+            songs = new ArrayList<>();
+            while(results.next()) {
+                Song song = new Song(
+                        results.getInt(1),
+                        results.getString(2),
+                        results.getString(3),
+                        results.getString(4),
+                        results.getInt(5)
+                );
+                songs.add(song);
+            }
+        } catch (SQLException e) {
+            System.out.println("Couldn't query Info " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            return songs;
         }
     }
 }
