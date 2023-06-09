@@ -20,7 +20,13 @@ public class Main {
 //        }
         Song riverOfPain= ds.querySongArtistInfo("river of pain");
 
-        ds.printTableMetaData(DataSource.TABLE_SONGS);
+        List<Song> check = ds.queryArtistInfo("1000");
+
+        if (check != null) {
+            check.forEach(System.out::println);
+        }
+
+//        ds.printTableMetaData(DataSource.TABLE_SONGS);
         ds.close();
     }
 }

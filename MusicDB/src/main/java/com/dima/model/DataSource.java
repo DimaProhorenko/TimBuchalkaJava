@@ -24,6 +24,13 @@ public class DataSource {
     public static final String COLUMN_SONGS_TITLE = "title";
     public static final String COLUMN_SONGS_ALBUM = "album";
 
+    public static final String ARTISTS_VIEW = "artists_view";
+    public static final String COLUMN_ARTISTS_VIEW_ID = "_id";
+    public static final String COLUMN_ARTISTS_VIEW_ARTIST = "artist";
+    public static final String COLUMN_ARTISTS_VIEW_ALBUM = "album";
+    public static final String COLUMN_ARITSTS_VIEW_TITLE = "title";
+    public static final String COLUMN_ARTISTS_VIEW_TRACK = "track";
+
     public static final String QUERY_ALL_ARTISTS = "SELECT * FROM %s ".formatted(TABLE_ARTISTS);
     public static final String QUERY_ALL_ARTISTS_SORT = "ORDER BY %s COLLATE NOCASE ".formatted(COLUMN_ARTISTS_NAME);
 
@@ -161,6 +168,30 @@ public class DataSource {
         } finally {
             return searchSong;
         }
+    }
+
+    public List<Song> queryArtistInfo(String artistName) {
+        List<Song> songs = null;
+        String sql = "SELECT * FROM " + ARTISTS_VIEW + " WHERE artist LIKE '" + artistName + "%'";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet results = stmt.executeQuery()) {
+            songs = new ArrayList<>();
+            while(results.next()) {
+                Song song = new Song(
+                        results.getInt(COLUMN_ARTISTS_VIEW_ID),
+                        results.getString(COLUMN_ARTISTS_VIEW_ARTIST),
+                        results.getString(COLUMN_ARTISTS_VIEW_ALBUM),
+                        results.getString(COLUMN_ARITSTS_VIEW_TITLE),
+                        results.getInt(COLUMN_ARTISTS_VIEW_TRACK)
+                );
+                songs.add(song);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return songs;
     }
 
     public void printTableMetaData(String tableName) {
