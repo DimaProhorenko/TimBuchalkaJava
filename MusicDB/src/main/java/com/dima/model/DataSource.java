@@ -40,6 +40,8 @@ public class DataSource {
                     .append(" WHERE %s.%s LIKE ".formatted(TABLE_ARTISTS, COLUMN_ARTISTS_NAME)).toString();
 
     public static final String QUERY_ALABUMS_BY_ARTIST_SORT = "ORDER BY %s.%s COLLATE NOCASE ".formatted(TABLE_ALBUMS, COLUMN_ALBUMS_NAME);
+    public static final String QUERY_SONG_INFO = "SELECT * FROM %s WHERE %s LIKE ?"
+            .formatted(ARTISTS_VIEW, COLUMN_ARTISTS_VIEW_ARTIST);
 
     public enum Order {
         NONE,
@@ -165,17 +167,17 @@ public class DataSource {
         } catch (SQLException e) {
             System.out.println("Couldn't query Info " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            return searchSong;
         }
+        return searchSong;
     }
 
-    public List<Song> queryArtistInfo(String artistName) {
+    public List<Song> queryArtistInfo(final String artistName) {
         List<Song> songs = null;
-        String sql = "SELECT * FROM " + ARTISTS_VIEW + " WHERE artist LIKE '" + artistName + "%'";
+//        String sql = "SELECT * FROM " + ARTISTS_VIEW + " WHERE artist LIKE '" + artistName + "%'";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet results = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(QUERY_SONG_INFO)) {
+            stmt.setString(1, artistName + "%");
+            ResultSet results = stmt.executeQuery();
             songs = new ArrayList<>();
             while(results.next()) {
                 Song song = new Song(
