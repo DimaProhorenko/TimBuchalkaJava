@@ -1,16 +1,14 @@
 package com.dima;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOError;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
     private static Map<Integer, Location> locations = new HashMap<>();
 
     static {
-        try (Scanner scanner = new Scanner(new FileReader("locations.txt"))) {
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("locations_big.txt")));
+             Scanner existsScanner = new Scanner(new BufferedReader(new FileReader("directions_big.txt")))) {
             scanner.useDelimiter(",");
             while(scanner.hasNextLine()) {
                 int loc = scanner.nextInt();
@@ -18,43 +16,24 @@ public class Locations implements Map<Integer, Location> {
                 String desc = scanner.nextLine();
                 locations.put(loc, new Location(loc, desc, null));
             }
+
+            while(existsScanner.hasNextLine()) {
+                String[] data = existsScanner.nextLine().split(",");
+                int loc = Integer.parseInt(data[0]);
+                String direction = data[1];
+                int destination = Integer.parseInt(data[2]);
+                locations.get(loc).addExit(direction, destination);
+
+            }
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-//        Map<String, Integer> tempExit = new HashMap<String, Integer>();
-//        locations.put(0, new Location(0, "You are sitting in front of a computer learning Java",null));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("W", 2);
-//        tempExit.put("E", 3);
-//        tempExit.put("S", 4);
-//        tempExit.put("N", 5);
-//        locations.put(1, new Location(1, "You are standing at the end of a road before a small brick building",tempExit));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("N", 5);
-//        locations.put(2, new Location(2, "You are at the top of a hill",tempExit));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("W", 1);
-//        locations.put(3, new Location(3, "You are inside a building, a well house for a small spring",tempExit));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("N", 1);
-//        tempExit.put("W", 2);
-//        locations.put(4, new Location(4, "You are in a valley beside a stream",tempExit));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("S", 1);
-//        tempExit.put("W", 2);
-//        locations.put(5, new Location(5, "You are in the forest",tempExit));
-
     }
 
     public static void main(String[] args) {
-        try (FileWriter locFile = new FileWriter("locations.txt");
-             FileWriter dirFile = new FileWriter("directions.txt")) {
+        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("locations.txt"));
+             BufferedWriter dirFile = new BufferedWriter(new FileWriter("directions.txt"))) {
             for (Location location : locations.values()) {
                 locFile.write("%s,%s%n".formatted(location.getLocationID(), location.getDescription()));
                 for (String direction : location.getExits().keySet()) {
