@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         List<String> buffer = new ArrayList<>();
         ReentrantLock bufferLock = new ReentrantLock();
-        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
 
         MyProducer p = new MyProducer(buffer, ThreadColor.ANSI_RED, bufferLock);
         MyConsumer c1 = new MyConsumer(buffer, ThreadColor.ANSI_GREEN, bufferLock);
